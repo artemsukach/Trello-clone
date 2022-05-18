@@ -1,9 +1,9 @@
 export default class TokenStorage {
-  static getToken(property) {
-    return window.localStorage.getItem(property);
+  static getToken(value) {
+    return window.localStorage.getItem(value);
   }
 
-  static setToken(property, value) {
-    return window.localStorage.setItem(property, value);
+  static setToken(username, value) {
+    return window.localStorage.setItem(username, value);
   }
 }

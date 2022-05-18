@@ -5,6 +5,7 @@ export default class CardsRequests {
     const cards = await FetchRequest.request({
       method: 'Get',
       path: `/cards`,
+      isCards: true,
     });
     return cards;
   }
@@ -13,6 +14,7 @@ export default class CardsRequests {
     const card = await FetchRequest.request({
       method: 'Get',
       path: `/cards/${id}`,
+      isCards: true,
     });
 
     return card;
@@ -22,6 +24,7 @@ export default class CardsRequests {
     const statuses = await FetchRequest.request({
       method: 'Get',
       path: `/statuses`,
+      isCards: true,
     });
 
     return statuses;
@@ -38,6 +41,7 @@ export default class CardsRequests {
       method: 'POST',
       path: `/cards`,
       body,
+      isCards: true,
     });
 
     return newCard;
@@ -53,6 +57,7 @@ export default class CardsRequests {
       method: 'PUT',
       path: `/cards/${id}`,
       body,
+      isCards: true,
     });
 
     return updatedCard;
@@ -62,6 +67,7 @@ export default class CardsRequests {
     const deletedCard = await FetchRequest.request({
       method: 'DELETE',
       path: `/cards/${id}`,
+      isCards: true,
     });
 
     return deletedCard;

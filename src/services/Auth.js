@@ -10,8 +10,9 @@ export default class Auth {
         password,
       },
       path: '/auth/local/register',
+      isCards: false,
     });
-    
+
     return registerResponse;
   }
   static async login(identifier, password) {
@@ -22,6 +23,7 @@ export default class Auth {
         password,
       },
       path: '/auth/local',
+      isCards: false,
     });
 
     return loginResponse;
