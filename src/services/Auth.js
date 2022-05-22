@@ -15,6 +15,7 @@ export default class Auth {
 
     return registerResponse;
   }
+
   static async login(identifier, password) {
     const loginResponse = await FetchRequest.request({
       method: 'POST',

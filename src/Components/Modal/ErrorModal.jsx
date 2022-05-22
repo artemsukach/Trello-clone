@@ -1,5 +1,5 @@
 import React from 'react';
-import cl from './ErrorModal.module.css';
+import cl from '../../styles/ErrorModal.module.css';
 
 export default function ErrorModal({ children, visible, setVisible }) {
   const rootClasses = [cl.errorModal];

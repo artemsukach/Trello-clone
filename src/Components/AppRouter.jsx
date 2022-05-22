@@ -1,46 +1,36 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { AuthContext } from '../context';
-import Error from '../Pages/Error';
+import Board from '../Pages/Board';
 import Registration from '../Pages/Registration';
 import { privateRoutes, publicRoutes } from '../router/routes';
+import Storage from '../services/Storage';
 
 function AppRouter() {
-  const {isAuth} = useContext(AuthContext)
+  const isAuth = Storage.getIsAuth();
 
   return isAuth ? (
     <Routes>
-      <Route path="/">
-        {privateRoutes.map((route) => (
-          <Route
-            component={route.component}
-            path={route.path}
-            exact={route.exact}
-            key={route.path}
-          />
-        ))}
+      <Route path="/" element={<Board />} />
+      {privateRoutes.map((route) => (
         <Route
-        path="*"
-        element={<Error to="/error" replace />}
-    />
-      </Route>
+          element={route.component}
+          path={route.path}
+          exact={route.exact}
+          key={route.path}
+        />
+      ))}
     </Routes>
   ) : (
     <Routes>
-      <Route path="/">
-        <Route index element={<Registration />} />
-        {publicRoutes.map((route) => (
-          <Route
-            element={route.component}
-            path={route.path}
-            exact={route.exact}
-            key={route.path}
-          />
-        ))}
+      <Route path="/" element={<Registration />} />
+      {publicRoutes.map((route) => (
         <Route
-        path="*"
-        element={<Error to="/error" replace />}/>
-      </Route>
+          element={route.component}
+          path={route.path}
+          exact={route.exact}
+          key={route.path}
+        />
+      ))}
     </Routes>
   );
 }

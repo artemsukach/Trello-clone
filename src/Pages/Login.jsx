@@ -1,29 +1,45 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthField from '../Components/AuthField';
 import Button from '../Components/Button';
 import { AuthContext } from '../context';
 import Auth from '../services/Auth';
 import ErrorProcessing from '../services/ErrorProcessing';
-import TokenStorage from '../services/TokenStorage';
+import Storage from '../services/Storage';
 import Navbar from './Navbar';
+import '../styles/authorization.css';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { setIsAuth, setErrorModal } = useContext(AuthContext);
+  const { setErrorModal } = useContext(AuthContext);
+  const { setIsAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
     try {
       const response = await Auth.login(username, password);
-      TokenStorage.setToken(username, response.jwt);
-      setIsAuth(true);
+
+      if (response.ok) {
+        let json = await response.json();
+
+        setIsAuth(true);
+
+        Storage.setIsAuth(true);
+        Storage.setToken(json.jwt);
+
+        navigate('/board');
+      } else {
+        throw new Error(response.status);
+      }
     } catch (e) {
       ErrorProcessing.httpErrorMessage(e);
       setErrorModal(true);
     }
   };
-
+  
   return (
     <div className="container">
       <Navbar />

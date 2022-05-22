@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400');
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display');
-body, .message, .form, form {
+.message, .form, form {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-body {
+#root{
+  display: flex;
+  justify-content: center;
   height: 100vh;
-  background: #E8E8E8;
-  font-family: 'Source Sans Pro', sans-serif;
-  overflow: hidden;
+  align-items: center;
 }
 .container {
   width: 700px;

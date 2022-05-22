@@ -1,25 +1,39 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthField from '../Components/AuthField';
 import Button from '../Components/Button';
 import { AuthContext } from '../context';
 import Auth from '../services/Auth';
 import ErrorProcessing from '../services/ErrorProcessing';
-import TokenStorage from '../services/TokenStorage';
+import Storage from '../services/Storage';
 import Navbar from './Navbar';
-import './registration.css';
+import '../styles/authorization.css';
 
 export default function Registration() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setIsAuth, setErrorModal } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
       const response = await Auth.register(username, email, password);
-      TokenStorage.setToken(username, response.jwt);
-      setIsAuth(true);
+
+      if (response.ok) {
+        let json = await response.json();
+
+        setIsAuth(true);
+
+        Storage.setToken(json.jwt);
+        Storage.setIsAuth(true);
+
+        navigate('/board');
+      } else {
+        throw new Error(response.status);
+      }
     } catch (e) {
       ErrorProcessing.httpErrorMessage(e);
       setErrorModal(true);

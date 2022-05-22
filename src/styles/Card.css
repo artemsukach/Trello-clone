@@ -1,0 +1,29 @@
+.board__card{
+  background-color: rgb(242, 245, 252);
+}
+.board__card-title{
+  font-weight: bold;
+}
+
+.board__btn-wrapper{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.board__button {
+  background-color: skyblue;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  font-size: 14px;
+  margin: 4px 0px;
+  opacity: 0.6;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.board__button:hover {opacity: 1}

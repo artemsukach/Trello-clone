@@ -7,6 +7,7 @@ export default class CardsRequests {
       path: `/cards`,
       isCards: true,
     });
+
     return cards;
   }
 
@@ -47,11 +48,14 @@ export default class CardsRequests {
     return newCard;
   }
 
-  static async updateCard(id, title, description) {
+  static async updateCard(id, title, description, value) {
+    const status = value || null;
     const body = {
       title,
       description,
+      status,
     };
+    console.log(body);
 
     const updatedCard = await FetchRequest.request({
       method: 'PUT',

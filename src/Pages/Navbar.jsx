@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './registration.css';
+import '../styles/authorization.css';
 
 export default function Navbar() {
   return (
