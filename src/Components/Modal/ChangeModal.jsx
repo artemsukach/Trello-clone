@@ -13,7 +13,6 @@ export default function ChangeModal({
   editCardStatus,
 }) {
   const rootClasses = [cl.changeModal];
-  // const { setErrorModal } = useContext(AuthContext);
   const [cardValues, setCardValues] = useState({
     title: '',
     description: '',
@@ -38,7 +37,6 @@ export default function ChangeModal({
       }
     } catch (e) {
       ErrorProcessing.httpErrorMessage(e);
-      // setErrorModal(true);
     }
   };
 

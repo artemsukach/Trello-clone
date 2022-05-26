@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../context';
+import React from 'react';
 import CardsRequests from '../services/Cards';
 import ErrorProcessing from '../services/ErrorProcessing';
 import '../styles/Card.css';
@@ -15,8 +14,6 @@ export default function Card({
   setCurrentCard,
   currentCard,
 }) {
-  // const { setErrorModal } = useContext(AuthContext);
-
   const dragOverHandler = (e) => {
     e.preventDefault();
     if (e.target.className === 'board__card') {
@@ -82,7 +79,6 @@ export default function Card({
       }
     } catch (e) {
       ErrorProcessing.httpErrorMessage(e);
-      // setErrorModal(true);
     }
   };
 
