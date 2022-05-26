@@ -1,51 +1,61 @@
-import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import AuthField from '../Components/AuthField';
 import Button from '../Components/Button';
-import { AuthContext } from '../context';
-import Auth from '../services/Auth';
-import ErrorProcessing from '../services/ErrorProcessing';
-import Storage from '../services/Storage';
+// import { AuthContext } from '../context';
+// import Auth from '../services/Auth';
+// import ErrorProcessing from '../services/ErrorProcessing';
+// import Storage from '../services/Storage';
 import Navbar from './Navbar';
 import '../styles/authorization.css';
+import { useAuth } from '../hooks/useProvideAuth';
+// import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { setErrorModal } = useContext(AuthContext);
-  const { setIsAuth } = useContext(AuthContext);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  // const { setErrorModal } = useContext(AuthContext);
+  // const { setIsAuth } = useContext(AuthContext);
+  // const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    
-    try {
-      const response = await Auth.login(username, password);
+  // const authContext = createContext();
+  const auth = useAuth();
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
-      if (response.ok) {
-        let json = await response.json();
+  //   try {
+  //     const response = await Auth.login(username, password);
 
-        setIsAuth(true);
+  //     if (response.ok) {
+  //       let json = await response.json();
 
-        Storage.setIsAuth(true);
-        Storage.setToken(json.jwt);
+  //       setIsAuth(true);
 
-        navigate('/board');
-      } else {
-        throw new Error(response.status);
-      }
-    } catch (e) {
-      ErrorProcessing.httpErrorMessage(e);
-      setErrorModal(true);
-    }
-  };
-  
+  //       Storage.setIsAuth(true);
+  //       Storage.setToken(json.jwt);
+
+  //       navigate('/board');
+  //     } else {
+  //       throw new Error(response.status);
+  //     }
+  //   } catch (e) {
+  //     ErrorProcessing.httpErrorMessage(e);
+  //     setErrorModal(true);
+  //   }
+  // };
+
   return (
     <div className="container">
       <Navbar />
       <div className="form form--signup">
         <div className="form--heading">Welcome! Sign In</div>
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={
+            (event) => auth.signin(username, password, event)
+            // navigate('/board');
+          }
+        >
           <AuthField
             value={username}
             name="username"

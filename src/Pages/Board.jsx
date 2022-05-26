@@ -4,12 +4,11 @@ import ChangeModal from '../Components/Modal/ChangeModal';
 import CardsRequests from '../services/Cards';
 import Loader from '../Loader/Loader';
 import { useFetching } from '../hooks/useFetching';
-import { useNavigate } from 'react-router-dom';
 import Storage from '../services/Storage';
-import { AuthContext } from '../context';
 import '../styles/board.css';
 import Card from '../Components/Card';
 import ErrorProcessing from '../services/ErrorProcessing';
+import { useAuth } from '../hooks/useProvideAuth';
 
 export default function Board() {
   const [columns, setColumns] = useState([]);
@@ -22,14 +21,14 @@ export default function Board() {
   const [fetchBoard, isLoading, boardError] = useFetching(async () => {
     const statusesResponse = await CardsRequests.getStatuses();
     const cardsResponse = await CardsRequests.getCards();
-    let statuses = await statusesResponse.json();
-    let cards = await cardsResponse.json();
+    const statuses = await statusesResponse.json();
+    const cards = await cardsResponse.json();
+
     setColumns(statuses);
     setCards(cards);
   });
-  const { setErrorModal } = useContext(AuthContext);
-  const { setIsAuth } = useContext(AuthContext);
-  const navigate = useNavigate();
+
+  const auth = useAuth();
 
   useEffect(() => {
     fetchBoard();
@@ -44,12 +43,6 @@ export default function Board() {
     if (e.target.className === 'board__card') {
       e.target.style.boxShadow = '0 4px 3px gray';
     }
-  };
-
-  const handleChangeAuth = () => {
-    Storage.setIsAuth(false);
-    setIsAuth(false);
-    navigate('/login');
   };
 
   const dropCardHandler = async (e, column) => {
@@ -73,7 +66,6 @@ export default function Board() {
       }
     } catch (e) {
       ErrorProcessing.httpErrorMessage(e);
-      setErrorModal(true);
     }
   };
 
@@ -111,7 +103,7 @@ export default function Board() {
         <button className="button-board" onClick={handleClick}>
           + Add card
         </button>
-        <button className="button-board" onClick={handleChangeAuth}>
+        <button className="button-board" onClick={auth.signout}>
           Log out
         </button>
       </div>

@@ -1,29 +1,32 @@
 import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthContext } from './context';
+// import { AuthContext } from './context';
 import AppRouter from './Components/AppRouter';
-import ErrorModal from './Components/Modal/ErrorModal';
+// import ErrorModal from './Components/Modal/ErrorModal';
+import { ProvideAuth } from './hooks/useProvideAuth';
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false);
-  const [errorModal, setErrorModal] = useState(false);
+  // const [isAuth, setIsAuth] = useState(false);
+  // const [errorModal, setErrorModal] = useState(false);
 
   return (
-    <AuthContext.Provider
-      value={{
-        isAuth,
-        setIsAuth,
-        errorModal,
-        setErrorModal,
-      }}
-    >
+    // <AuthContext.Provider
+    //   value={{
+    //     isAuth,
+    //     setIsAuth,
+    //     errorModal,
+    //     setErrorModal,
+    //   }}
+    // >
+    <ProvideAuth>
       <BrowserRouter>
-        <ErrorModal visible={errorModal} setVisible={setErrorModal}>
+        {/* <ErrorModal visible={errorModal} setVisible={setErrorModal}>
           Error! Check the entered data!
-        </ErrorModal>
+        </ErrorModal> */}
         <AppRouter />
       </BrowserRouter>
-    </AuthContext.Provider>
+    </ProvideAuth>
+    // {/* </AuthContext.Provider> */}
   );
 }
 

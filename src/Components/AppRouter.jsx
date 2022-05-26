@@ -1,14 +1,19 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { useAuth } from '../hooks/useProvideAuth';
+import Loader from '../Loader/Loader';
 import Board from '../Pages/Board';
 import Registration from '../Pages/Registration';
 import { privateRoutes, publicRoutes } from '../router/routes';
-import Storage from '../services/Storage';
 
 function AppRouter() {
-  const isAuth = Storage.getIsAuth();
+  const auth = useAuth();
 
-  return isAuth ? (
+  if (auth.isLoading) {
+    return <Loader />;
+  }
+
+  return auth.isAuth ? (
     <Routes>
       <Route path="/" element={<Board />} />
       {privateRoutes.map((route) => (
@@ -19,6 +24,7 @@ function AppRouter() {
           key={route.path}
         />
       ))}
+      <Route path="*" element={<Navigate to="/board" replace />} />
     </Routes>
   ) : (
     <Routes>
@@ -31,6 +37,7 @@ function AppRouter() {
           key={route.path}
         />
       ))}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

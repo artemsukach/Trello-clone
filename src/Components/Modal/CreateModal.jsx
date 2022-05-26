@@ -17,7 +17,7 @@ export default function CreateModal({
     status: 'to_do',
   });
   const rootClasses = [cl.createModal];
-  const { setErrorModal } = useContext(AuthContext);
+  // const { setErrorModal } = useContext(AuthContext);
 
   const handleClick = async () => {
     try {
@@ -37,7 +37,7 @@ export default function CreateModal({
       }
     } catch (e) {
       ErrorProcessing.httpErrorMessage(e);
-      setErrorModal(true);
+      // setErrorModal(true);
     }
   };
 

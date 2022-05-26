@@ -15,7 +15,7 @@ export default function Card({
   setCurrentCard,
   currentCard,
 }) {
-  const { setErrorModal } = useContext(AuthContext);
+  // const { setErrorModal } = useContext(AuthContext);
 
   const dragOverHandler = (e) => {
     e.preventDefault();
@@ -82,7 +82,7 @@ export default function Card({
       }
     } catch (e) {
       ErrorProcessing.httpErrorMessage(e);
-      setErrorModal(true);
+      // setErrorModal(true);
     }
   };
 

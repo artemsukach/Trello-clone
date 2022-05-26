@@ -1,17 +1,17 @@
 export default class Storage {
   static getToken() {
-    return localStorage.getItem('token');
+    return window.localStorage.getItem('token');
   }
 
   static setToken(value) {
-    return localStorage.setItem('token', value);
+    return window.localStorage.setItem('token', value);
   }
 
   static setIsAuth(isAuth) {
-    return localStorage.setItem('isAuth', isAuth);
+    return window.localStorage.setItem('isAuth', isAuth);
   }
 
   static getIsAuth() {
-    return localStorage.getItem('isAuth');
+    return window.localStorage.getItem('isAuth');
   }
 }
