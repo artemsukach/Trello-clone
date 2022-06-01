@@ -2,42 +2,36 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../hooks/useProvideAuth';
 import Loader from '../Loader/Loader';
-import Board from '../Pages/Board';
-import Registration from '../Pages/Registration';
-import { privateRoutes, publicRoutes } from '../router/routes';
+import { routes } from '../router/routes';
+
+const PrivateRoute = ({ needAuth, children}) => {
+  const auth = useAuth();
+
+  if (needAuth && !auth.isAuth) {
+    return <Navigate to="/" replace/>;
+  }
+
+  return children;
+};
 
 function AppRouter() {
   const auth = useAuth();
+  console.log(auth)
 
   if (auth.isLoading) {
     return <Loader />;
   }
 
-  return auth.isAuth ? (
+  return (
     <Routes>
-      <Route path="/" element={<Board />} />
-      {privateRoutes.map((route) => (
+      {routes.map((route) => (
         <Route
-          element={route.component}
           path={route.path}
-          exact={route.exact}
+          element={<PrivateRoute needAuth={route.needAuth}>{route.component}</PrivateRoute>}
           key={route.path}
+          exact={route.exact}
         />
       ))}
-      <Route path="*" element={<Navigate to="/board" replace />} />
-    </Routes>
-  ) : (
-    <Routes>
-      <Route path="/" element={<Registration />} />
-      {publicRoutes.map((route) => (
-        <Route
-          element={route.component}
-          path={route.path}
-          exact={route.exact}
-          key={route.path}
-        />
-      ))}
-      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

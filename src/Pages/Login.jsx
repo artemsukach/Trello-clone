@@ -15,7 +15,12 @@ export default function Login() {
       <Navbar />
       <div className="form form--signup">
         <div className="form--heading">Welcome! Sign In</div>
-        <form onSubmit={(event) => auth.signin(username, password, event)}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            auth.signin(username, password);
+          }}
+        >
           <AuthField
             value={username}
             name="username"

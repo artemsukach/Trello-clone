@@ -1,5 +1,5 @@
 import React from 'react';
-import cl from '../../styles/ChangeModal.module.css';
+import cl from '../../styles/EditCardModal.module.css';
 
 export default function CardField({name, callback}) {
   return (

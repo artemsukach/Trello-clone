@@ -4,57 +4,57 @@ import ErrorProcessing from '../services/ErrorProcessing';
 import '../styles/Card.css';
 
 export default function Card({
-  item,
+  // item,
   card,
   cards,
   setCards,
   setEditModal,
   setId,
   setEditCardStatus,
-  setCurrentCard,
-  currentCard,
+  // setCurrentCard,
+  // currentCard,
 }) {
-  const dragOverHandler = (e) => {
-    e.preventDefault();
-    if (e.target.className === 'board__card') {
-      e.target.style.boxShadow = '0 4px 3px gray';
-    }
-  };
+  // const dragOverHandler = (e) => {
+  //   e.preventDefault();
+  //   if (e.target.className === 'board__card') {
+  //     e.target.style.boxShadow = '0 4px 3px gray';
+  //   }
+  // };
 
-  const dragLeaveHandler = (e) => {
-    e.target.style.boxShadow = 'none';
-  };
+  // const dragLeaveHandler = (e) => {
+  //   e.target.style.boxShadow = 'none';
+  // };
 
-  const dragStartHandler = (e, card) => {
-    setCurrentCard(card);
-  };
+  // const dragStartHandler = (e, card) => {
+  //   setCurrentCard(card);
+  // };
 
-  const dragEndHandler = (e) => {
-    e.target.style.boxShadow = 'none';
-  };
+  // const dragEndHandler = (e) => {
+  //   e.target.style.boxShadow = 'none';
+  // };
 
-  const dropHandler = async (e, column) => {
-    e.preventDefault();
-    cards.find((item) => item === currentCard).status = column.value;
-    const card = await CardsRequests.updateCard(
-      currentCard.id,
-      currentCard.title,
-      currentCard.description,
-      currentCard.status
-    );
-    updateCard(card);
-  };
+  // const dropHandler = async (e, column) => {
+  //   e.preventDefault();
+  //   cards.find((item) => item === currentCard).status = column.value;
+  //   const card = await CardsRequests.updateCard(
+  //     currentCard.id,
+  //     currentCard.title,
+  //     currentCard.description,
+  //     currentCard.status
+  //   );
+  //   updateCard(card);
+  // };
 
-  const updateCard = (updatedCard) => {
-    const newCardsArray = cards.map((item) => {
-      if (item.id === updatedCard.id) {
-        return updatedCard;
-      }
-      return item;
-    });
+  // const updateCard = (updatedCard) => {
+  //   const newCardsArray = cards.map((item) => {
+  //     if (item.id === updatedCard.id) {
+  //       return updatedCard;
+  //     }
+  //     return item;
+  //   });
 
-    setCards(newCardsArray);
-  };
+  //   setCards(newCardsArray);
+  // };
 
   const editCard = (e) => {
     setEditModal(true);
@@ -85,12 +85,12 @@ export default function Card({
   return (
     <div
       className="board__card"
-      onDragOver={(e) => dragOverHandler(e)}
-      onDragLeave={(e) => dragLeaveHandler(e)}
-      onDragStart={(e) => dragStartHandler(e, card)}
-      onDragEnd={(e) => dragEndHandler(e)}
-      onDrop={(e) => dropHandler(e, item)}
-      draggable={true}
+      // onDragOver={(e) => dragOverHandler(e)}
+      // onDragLeave={(e) => dragLeaveHandler(e)}
+      // onDragStart={(e) => dragStartHandler(e, card)}
+      // onDragEnd={(e) => dragEndHandler(e)}
+      // onDrop={(e) => dropHandler(e, item)}
+      // draggable={true}
     >
       <p className="board__card-title">{card.title}</p>
       <p className="board__card-description">{card.description}</p>

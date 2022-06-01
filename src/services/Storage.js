@@ -7,11 +7,7 @@ export default class Storage {
     return window.localStorage.setItem('token', value);
   }
 
-  static setIsAuth(isAuth) {
-    return window.localStorage.setItem('isAuth', isAuth);
-  }
-
-  static getIsAuth() {
-    return window.localStorage.getItem('isAuth');
+  static removeToken() {
+    return window.localStorage.removeItem('token');
   }
 }

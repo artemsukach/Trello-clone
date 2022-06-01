@@ -1,35 +1,35 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../../context';
+import React, { useState } from 'react';
 import CardsRequests from '../../services/Cards';
-import ErrorProcessing from '../../services/ErrorProcessing';
+import cl from '../../styles/EditCardModal.module.css';
 import CardField from './CardField';
-import cl from '../../styles/CreateModal.module.css';
+import ErrorProcessing from '../../services/ErrorProcessing';
 
-export default function CreateModal({
+export default function EditCardModal({
   visible,
   setVisible,
-  columns,
-  updateCards,
+  id,
+  updateCard,
+  editCardStatus,
 }) {
+  const rootClasses = [cl.changeModal];
   const [cardValues, setCardValues] = useState({
     title: '',
     description: '',
-    status: 'to_do',
   });
-  const rootClasses = [cl.createModal];
 
   const handleClick = async () => {
     try {
-      const response = await CardsRequests.createCard(
+      const response = await CardsRequests.updateCard(
+        id,
         cardValues.title,
         cardValues.description,
-        cardValues.status
+        editCardStatus
       );
 
       if (response.ok) {
         const card = await response.json();
 
-        updateCards(card);
+        updateCard(card);
         setVisible(false);
       } else {
         throw new Error(response.status);
@@ -47,7 +47,7 @@ export default function CreateModal({
     <div className={rootClasses.join(' ')} onClick={() => setVisible(false)}>
       <div className={cl.closeBtn}></div>
       <div
-        className={cl.createModalContent}
+        className={cl.changeModalContent}
         onClick={(e) => e.stopPropagation()}
       >
         <CardField
@@ -62,23 +62,8 @@ export default function CreateModal({
             setCardValues({ ...cardValues, description: e.target.value })
           }
         />
-        <select
-          className={cl.select}
-          name="statuses"
-          onChange={(e) =>
-            setCardValues({ ...cardValues, status: e.target.value })
-          }
-        >
-          {columns.map((status) => {
-            return (
-              <option value={status.value} key={status.value}>
-                {status.title}
-              </option>
-            );
-          })}
-        </select>
-        <button className={cl.btnCreate} onClick={handleClick}>
-          Create
+        <button className={cl.btnChange} onClick={handleClick}>
+          Change
         </button>
       </div>
     </div>

@@ -1,36 +1,34 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import CardsRequests from '../../services/Cards';
-import cl from '../../styles/ChangeModal.module.css';
-import CardField from './CardField';
 import ErrorProcessing from '../../services/ErrorProcessing';
-import { AuthContext } from '../../context';
+import CardField from './CardField';
+import cl from '../../styles/CreateCardModal.module.css';
 
-export default function ChangeModal({
+export default function CreateModal({
   visible,
   setVisible,
-  id,
-  updateCard,
-  editCardStatus,
+  columns,
+  updateCards,
 }) {
-  const rootClasses = [cl.changeModal];
   const [cardValues, setCardValues] = useState({
     title: '',
     description: '',
+    status: 'to_do',
   });
+  const rootClasses = [cl.createModal];
 
   const handleClick = async () => {
     try {
-      const response = await CardsRequests.updateCard(
-        id,
+      const response = await CardsRequests.createCard(
         cardValues.title,
         cardValues.description,
-        editCardStatus
+        cardValues.status
       );
 
       if (response.ok) {
         const card = await response.json();
 
-        updateCard(card);
+        updateCards(card);
         setVisible(false);
       } else {
         throw new Error(response.status);
@@ -48,7 +46,7 @@ export default function ChangeModal({
     <div className={rootClasses.join(' ')} onClick={() => setVisible(false)}>
       <div className={cl.closeBtn}></div>
       <div
-        className={cl.changeModalContent}
+        className={cl.createModalContent}
         onClick={(e) => e.stopPropagation()}
       >
         <CardField
@@ -63,8 +61,23 @@ export default function ChangeModal({
             setCardValues({ ...cardValues, description: e.target.value })
           }
         />
-        <button className={cl.btnChange} onClick={handleClick}>
-          Change
+        <select
+          className={cl.select}
+          name="statuses"
+          onChange={(e) =>
+            setCardValues({ ...cardValues, status: e.target.value })
+          }
+        >
+          {columns.map((status) => {
+            return (
+              <option value={status.value} key={status.value}>
+                {status.title}
+              </option>
+            );
+          })}
+        </select>
+        <button className={cl.btnCreate} onClick={handleClick}>
+          Create
         </button>
       </div>
     </div>

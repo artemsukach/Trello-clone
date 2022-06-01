@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import Auth from '../services/Auth';
+import { createContext, useContext, useState } from 'react';
+import AuthService from '../services/AuthService';
 import Storage from '../services/Storage';
 
 const authContext = createContext();
@@ -15,26 +15,17 @@ export const useAuth = () => {
 };
 
 function useProvideAuth() {
-  const [isAuth, setIsAuth] = useState(
-    JSON.parse(Storage.getIsAuth()) || false
-  );
+  const [isAuth, setIsAuth] = useState(Storage.getToken() != null || false);
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    Storage.setIsAuth(isAuth);
-  }, [isAuth]);
-
-  async function signin(username, password, event) {
-    event.preventDefault();
+  async function signin(username, password) {
     setIsLoading(true);
 
     try {
-      const response = await Auth.login(username, password);
+      const response = await AuthService.login(username, password);
 
       if (response.ok) {
-        setIsLoading(false);
-
         let json = await response.json();
 
         setIsAuth(true);
@@ -44,19 +35,18 @@ function useProvideAuth() {
       }
     } catch (e) {
       setErrors(e.name);
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  async function signup(username, email, password, event) {
-    event.preventDefault();
+  async function signup(username, email, password) {
     setIsLoading(true);
 
     try {
-      const response = await Auth.register(username, email, password);
+      const response = await AuthService.register(username, email, password);
 
       if (response.ok) {
-        setIsLoading(false);
-
         let json = await response.json();
 
         setIsAuth(true);
@@ -66,11 +56,14 @@ function useProvideAuth() {
       }
     } catch (e) {
       setErrors(e.name);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   function signout() {
     setIsAuth(false);
+    Storage.removeToken();
   }
 
   return {

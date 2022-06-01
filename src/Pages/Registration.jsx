@@ -17,7 +17,10 @@ export default function Registration() {
       <div className="form form--signup">
         <div className="form--heading">Welcome! Sign Up</div>
         <form
-          onSubmit={(event) => auth.signup(username, email, password, event)}
+          onSubmit={(event) => {
+            event.preventDefault();
+            auth.signup(username, email, password);
+          }}
         >
           <AuthField
             value={username}

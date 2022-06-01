@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import CardModal from '../Components/Modal/CreateModal';
-import ChangeModal from '../Components/Modal/ChangeModal';
+import CreateCardModal from '../Components/Modal/CreateCardModal';
+import EditCardModal from '../Components/Modal/EditCardModal';
 import CardsRequests from '../services/Cards';
 import Loader from '../Loader/Loader';
 import { useFetching } from '../hooks/useFetching';
 import '../styles/board.css';
 import Card from '../Components/Card';
-import ErrorProcessing from '../services/ErrorProcessing';
 import { useAuth } from '../hooks/useProvideAuth';
 
 export default function Board() {
@@ -14,9 +13,6 @@ export default function Board() {
   const [cards, setCards] = useState([]);
   const [createModal, setCreateModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [id, setId] = useState('');
-  const [editCardStatus, setEditCardStatus] = useState('');
-  const [currentCard, setCurrentCard] = useState(null);
   const [fetchBoard, isLoading, boardError] = useFetching(async () => {
     const statusesResponse = await CardsRequests.getStatuses();
     const cardsResponse = await CardsRequests.getCards();
@@ -26,8 +22,12 @@ export default function Board() {
     setColumns(statuses);
     setCards(cards);
   });
-
   const auth = useAuth();
+
+  const [id, setId] = useState('');
+  const [editCardStatus, setEditCardStatus] = useState('');
+  // const [currentCard, setCurrentCard] = useState(null);
+
 
   useEffect(() => {
     fetchBoard();
@@ -37,36 +37,36 @@ export default function Board() {
     setCards([...cards, newCard]);
   };
 
-  const dragOverHandler = (e) => {
-    e.preventDefault();
-    if (e.target.className === 'board__card') {
-      e.target.style.boxShadow = '0 4px 3px gray';
-    }
-  };
+  // const dragOverHandler = (e) => {
+  //   e.preventDefault();
+  //   if (e.target.className === 'board__card') {
+  //     e.target.style.boxShadow = '0 4px 3px gray';
+  //   }
+  // };
 
-  const dropCardHandler = async (e, column) => {
-    e.preventDefault();
+  // const dropCardHandler = async (e, column) => {
+  //   e.preventDefault();
 
-    cards.find((item) => item === currentCard).status = column.value;
-    try {
-      const response = await CardsRequests.updateCard(
-        currentCard.id,
-        currentCard.title,
-        currentCard.description,
-        currentCard.status
-      );
+  //   cards.find((item) => item === currentCard).status = column.value;
+  //   try {
+  //     const response = await CardsRequests.updateCard(
+  //       currentCard.id,
+  //       currentCard.title,
+  //       currentCard.description,
+  //       currentCard.status
+  //     );
 
-      if (response.ok) {
-        let json = await response.json();
+  //     if (response.ok) {
+  //       let json = await response.json();
 
-        updateCard(json);
-      } else {
-        throw new Error(response.status);
-      }
-    } catch (e) {
-      ErrorProcessing.httpErrorMessage(e);
-    }
-  };
+  //       updateCard(json);
+  //     } else {
+  //       throw new Error(response.status);
+  //     }
+  //   } catch (e) {
+  //     ErrorProcessing.httpErrorMessage(e);
+  //   }
+  // };
 
   const updateCard = (updatedCard) => {
     const newCardsArray = cards.map((item) => {
@@ -85,13 +85,13 @@ export default function Board() {
 
   return (
     <div className="board">
-      <CardModal
+      <CreateCardModal
         visible={createModal}
         setVisible={setCreateModal}
         columns={columns}
         updateCards={updateCards}
       />
-      <ChangeModal
+      <EditCardModal
         visible={editModal}
         setVisible={setEditModal}
         id={id}
@@ -119,28 +119,27 @@ export default function Board() {
             <div
               className="board__item"
               key={item.id}
-              onDragOver={(e) => dragOverHandler(e)}
-              onDrop={(e) => dropCardHandler(e, item)}
+              // onDragOver={(e) => dragOverHandler(e)}
+              // onDrop={(e) => dropCardHandler(e, item)}
             >
               <div className="board__item-title">{item.title}</div>
               {cards.map((card) => {
-                if (card.status === item.value) {
-                  return (
-                    <Card
-                      item={item}
-                      card={card}
-                      cards={cards}
-                      setCards={setCards}
-                      setEditModal={setEditModal}
-                      setId={setId}
-                      setEditCardStatus={setEditCardStatus}
-                      setCurrentCard={setCurrentCard}
-                      currentCard={setCurrentCard}
-                      key={card.id}
-                    />
-                  );
-                }
-                return false;
+                if (card.status !== item.value) return null;
+
+                return (
+                  <Card
+                    item={item}
+                    card={card}
+                    cards={cards}
+                    setCards={setCards}
+                    setEditModal={setEditModal}
+                    setId={setId}
+                    setEditCardStatus={setEditCardStatus}
+                    // setCurrentCard={setCurrentCard}
+                    // currentCard={setCurrentCard}
+                    key={card.id}
+                  />
+                );
               })}
             </div>
           ))}

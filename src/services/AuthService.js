@@ -1,6 +1,6 @@
 import FetchRequest from './FetchRequest';
 
-export default class Auth {
+export default class AuthService {
   static async register(username, email, password) {
     const registerResponse = await FetchRequest.request({
       method: 'POST',
@@ -10,7 +10,6 @@ export default class Auth {
         password,
       },
       path: '/auth/local/register',
-      isCards: false,
     });
 
     return registerResponse;
@@ -24,7 +23,6 @@ export default class Auth {
         password,
       },
       path: '/auth/local',
-      isCards: false,
     });
 
     return loginResponse;
