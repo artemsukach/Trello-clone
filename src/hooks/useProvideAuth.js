@@ -1,4 +1,6 @@
 import { createContext, useContext, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setError } from '../redux/error/actions';
 import AuthService from '../services/AuthService';
 import Storage from '../services/Storage';
 
@@ -16,8 +18,8 @@ export const useAuth = () => {
 
 function useProvideAuth() {
   const [isAuth, setIsAuth] = useState(Storage.getToken() != null || false);
-  const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   async function signin(username, password) {
     setIsLoading(true);
@@ -34,7 +36,7 @@ function useProvideAuth() {
         throw new Error(response.status);
       }
     } catch (e) {
-      setErrors(e.name);
+      dispatch(setError(true));
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +57,7 @@ function useProvideAuth() {
         throw new Error(response.status);
       }
     } catch (e) {
-      setErrors(e.name);
+      dispatch(setError(true));
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +73,6 @@ function useProvideAuth() {
     signin,
     signup,
     signout,
-    errors,
     isLoading,
   };
 }

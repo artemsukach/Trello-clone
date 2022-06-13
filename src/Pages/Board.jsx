@@ -1,41 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import CreateCardModal from '../Components/Modal/CreateCardModal';
-import EditCardModal from '../Components/Modal/EditCardModal';
-import CardsRequests from '../services/Cards';
+import React, { useEffect } from 'react';
+import Modal from '../Components/Modal/CardModal';
 import Loader from '../Loader/Loader';
-import { useFetching } from '../hooks/useFetching';
 import '../styles/board.css';
 import Card from '../Components/Card';
 import { useAuth } from '../hooks/useProvideAuth';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchStatuses } from '../actions/fetchStatuses';
+import { fetchCards } from '../actions/fetchCards';
+import { setModal } from '../redux/modal/actions';
+import ErrorModal from '../Components/Modal/ErrorModal';
 
 export default function Board() {
-  const [columns, setColumns] = useState([]);
-  const [cards, setCards] = useState([]);
-  const [createModal, setCreateModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
-  const [fetchBoard, isLoading, boardError] = useFetching(async () => {
-    const statusesResponse = await CardsRequests.getStatuses();
-    const cardsResponse = await CardsRequests.getCards();
-    const statuses = await statusesResponse.json();
-    const cards = await cardsResponse.json();
-
-    setColumns(statuses);
-    setCards(cards);
-  });
+  const dispatch = useDispatch();
+  const statuses = useSelector((state) => state.statuses);
+  const cards = useSelector((state) => state.cards);
+  const isLoading = useSelector((state) => state.statuses.isLoading);
   const auth = useAuth();
 
-  const [id, setId] = useState('');
-  const [editCardStatus, setEditCardStatus] = useState('');
-  // const [currentCard, setCurrentCard] = useState(null);
-
-
   useEffect(() => {
-    fetchBoard();
+    dispatch(fetchStatuses());
+    dispatch(fetchCards());
   }, []);
 
-  const updateCards = (newCard) => {
-    setCards([...cards, newCard]);
-  };
+  // const updateCards = (newCard) => {
+  //   setCards([...cards, newCard]);
+  // };
 
   // const dragOverHandler = (e) => {
   //   e.preventDefault();
@@ -68,45 +57,33 @@ export default function Board() {
   //   }
   // };
 
-  const updateCard = (updatedCard) => {
-    const newCardsArray = cards.map((item) => {
-      if (item.id === updatedCard.id) {
-        return updatedCard;
-      }
-      return item;
-    });
+  // const updateCard = (updatedCard) => {
+  //   const newCardsArray = cards.map((item) => {
+  //     if (item.id === updatedCard.id) {
+  //       return updatedCard;
+  //     }
+  //     return item;
+  //   });
 
-    setCards(newCardsArray);
-  };
-
-  const handleClick = () => {
-    setCreateModal(true);
-  };
+  //   setCards(newCardsArray);
+  // };
 
   return (
     <div className="board">
-      <CreateCardModal
-        visible={createModal}
-        setVisible={setCreateModal}
-        columns={columns}
-        updateCards={updateCards}
-      />
-      <EditCardModal
-        visible={editModal}
-        setVisible={setEditModal}
-        id={id}
-        updateCard={updateCard}
-        editCardStatus={editCardStatus}
-      />
+      <ErrorModal>Error</ErrorModal>
+      <Modal />
       <div className="button-wrapper">
-        <button className="button-board" onClick={handleClick}>
+        <button
+          className="button-board"
+          onClick={() => dispatch(setModal({ active: true }))}
+        >
           + Add card
         </button>
         <button className="button-board" onClick={auth.signout}>
           Log out
         </button>
       </div>
-      {boardError && <h1>Error: {boardError}</h1>}
+      {/* {isError && <h1>Error</h1>} */}
       {isLoading ? (
         <div
           style={{ display: 'flex', justifyContent: 'center', marginTop: 300 }}
@@ -115,7 +92,7 @@ export default function Board() {
         </div>
       ) : (
         <div className="board__items">
-          {columns.map((item) => (
+          {statuses.map((item) => (
             <div
               className="board__item"
               key={item.id}
@@ -128,13 +105,7 @@ export default function Board() {
 
                 return (
                   <Card
-                    item={item}
                     card={card}
-                    cards={cards}
-                    setCards={setCards}
-                    setEditModal={setEditModal}
-                    setId={setId}
-                    setEditCardStatus={setEditCardStatus}
                     // setCurrentCard={setCurrentCard}
                     // currentCard={setCurrentCard}
                     key={card.id}

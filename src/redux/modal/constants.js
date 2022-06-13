@@ -1,0 +1,1 @@
+export const SET_ADD_CARD_MODAL = 'SET_MODAL';

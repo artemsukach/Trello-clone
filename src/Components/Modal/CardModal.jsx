@@ -1,49 +1,56 @@
 import React, { useState } from 'react';
-import CardsRequests from '../../services/Cards';
-import ErrorProcessing from '../../services/ErrorProcessing';
 import CardField from './CardField';
 import cl from '../../styles/CreateCardModal.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCreateCard } from '../../actions/fetchCreateCard';
+import { setModal } from '../../redux/modal/actions';
+import { fetchUpdateCard } from '../../actions/fetchUpdateCard';
 
-export default function CreateModal({
-  visible,
-  setVisible,
-  columns,
-  updateCards,
-}) {
+export default function Modal() {
   const [cardValues, setCardValues] = useState({
     title: '',
     description: '',
     status: 'to_do',
   });
+
   const rootClasses = [cl.createModal];
+  const dispatch = useDispatch();
+  const addCardModal = useSelector((state) => state.modal.active);
+  const card = useSelector((state) => state.modal.card);
+  const statuses = useSelector((state) => state.statuses);
 
   const handleClick = async () => {
-    try {
-      const response = await CardsRequests.createCard(
-        cardValues.title,
-        cardValues.description,
-        cardValues.status
+    if (card.id) {
+      dispatch(
+        fetchUpdateCard(
+          card.id,
+          cardValues.title,
+          cardValues.description,
+          cardValues.status
+        )
       );
-
-      if (response.ok) {
-        const card = await response.json();
-
-        updateCards(card);
-        setVisible(false);
-      } else {
-        throw new Error(response.status);
-      }
-    } catch (e) {
-      ErrorProcessing.httpErrorMessage(e);
+    } else {
+      dispatch(
+        fetchCreateCard(
+          cardValues.title,
+          cardValues.description,
+          cardValues.status
+        )
+      );
     }
+
+    dispatch(setModal({active:false}));
   };
 
-  if (visible) {
+  if (addCardModal) {
     rootClasses.push(cl.active);
   }
 
   return (
-    <div className={rootClasses.join(' ')} onClick={() => setVisible(false)}>
+    <div
+      className={rootClasses.join(' ')}
+      onClick={() => dispatch(setModal({active:false}))}
+    >
       <div className={cl.closeBtn}></div>
       <div
         className={cl.createModalContent}
@@ -68,7 +75,7 @@ export default function CreateModal({
             setCardValues({ ...cardValues, status: e.target.value })
           }
         >
-          {columns.map((status) => {
+          {statuses.map((status) => {
             return (
               <option value={status.value} key={status.value}>
                 {status.title}

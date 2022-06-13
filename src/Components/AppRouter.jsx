@@ -1,22 +1,14 @@
 import React from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useAuth } from '../hooks/useProvideAuth';
 import Loader from '../Loader/Loader';
+import Board from '../Pages/Board';
+import Login from '../Pages/Login';
 import { routes } from '../router/routes';
-
-const PrivateRoute = ({ needAuth, children}) => {
-  const auth = useAuth();
-
-  if (needAuth && !auth.isAuth) {
-    return <Navigate to="/" replace/>;
-  }
-
-  return children;
-};
+import PrivateRoute from './PrivateRoute';
 
 function AppRouter() {
   const auth = useAuth();
-  console.log(auth)
 
   if (auth.isLoading) {
     return <Loader />;
@@ -24,10 +16,20 @@ function AppRouter() {
 
   return (
     <Routes>
+      {auth.isAuth ? (
+        <Route path="/" element={<Board />} />
+      ) : (
+        <Route path="/" element={<Login />} />
+      )}
+
       {routes.map((route) => (
         <Route
           path={route.path}
-          element={<PrivateRoute needAuth={route.needAuth}>{route.component}</PrivateRoute>}
+          element={
+            <PrivateRoute needAuth={route.needAuth}>
+              {route.component}
+            </PrivateRoute>
+          }
           key={route.path}
           exact={route.exact}
         />
